@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: car-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: car-api
+  template:
+    metadata:
+      labels:
+        app: car-api
+    spec:
+      containers:
+      - name: car-api
+        image: car-api:latest
+        imagePullPolicy: Never  # Use local Docker image from Minikube
+        ports:
+        - containerPort: 8080  # Match your Flask app port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: car-api-service
+spec:
+  selector:
+    app: car-api
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: NodePort
